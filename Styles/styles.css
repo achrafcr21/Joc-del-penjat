@@ -1,9 +1,111 @@
 body {
-    font-family: Arial, Helvetica, sans-serif;
-    background-color: aqua;
-
+    font-family: Arial, sans-serif; /* Establece la tipografía */
+    background-color: #00cda7; /* Color de fondo */
+    display: flex;
+    flex-direction: column; /* Alinea verticalmente */
+    align-items: center; /* Centra los contenidos */
+    padding: 20px;
+    max-width: 100%;
+}
+.header {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+    padding: 20px;
+    background-color: #5b7df0; /* Añade un color de fondo suave */
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Sutil sombra para dar profundidad */
+    margin-bottom: 20px;
+}
+#iconOjo{
+    cursor: pointer;
 }
 
-body h1 {
-    text-decoration: solid;
+input {
+    flex-grow: 1; /* Permite que el input crezca para llenar el espacio disponible */
+    margin-right: 10px; /* Espacio entre el input y el icono/botón */
+    padding: 8px;
+    border: 2px solid #ccc;
+    border-radius: 4px;
+}
+
+button {
+    padding: 10px 15px;
+    font-size: 20px;
+    background-color: #ffffff;
+    color: rgb(0, 0, 0);
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+button:hover {
+    background-color: #0056b3; /* Un efecto hover más oscuro para el icono y el botón */
+    font-size: 25px;
+}
+
+#comenzarPartida {
+    margin-left: 10px; /* Espacio adicional entre el icono y el botón */
+}
+
+h1 {
+    flex-basis: 30%; /* Ocupa un 30% del encabezado, asegurando que no se comprime demasiado */
+    color: #333;
+    margin-right: 20px; /* Espacio entre el título y los elementos de entrada */
+}
+h1 {
+    margin-right: 20px;
+    color: #333;
+}
+
+
+
+/* Estilos para el contenedor de la entrada y el botón */
+.espai_lletres {
+    background-color: #5b7df0; /* Azul claro para el fondo */
+    margin-top: 30px;
+    margin-bottom: 40px;
+    border-radius: 8px; 
+    display: flex;
+    justify-content: center;
+    width: 85vw;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.1); /* Sombra sutil */
+}
+
+
+.Buttons > button{
+    margin: 5px;
+    border: solid 1px black;
+    background-color: rgb(174, 233, 243);
+    width:2.5vw;
+    height: 2.5vw;
+    padding: 5px;
+    font-family:cursive;
+}
+
+#resposta{
+    font-size: 50px;
+    letter-spacing: 20px;
+}
+
+#img{
+    display: flex;
+    justify-content: center;
+    margin-bottom: 20px;
+    border: 2px solid ;
+}
+
+.menu{
+    width: 80vw;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+}
+
+#turnJugador1, #turnJugador2{
+    background-color: #0056b3;
+    border: 2px solid;
+    width: 15vw;
+    text-align: center;
 }

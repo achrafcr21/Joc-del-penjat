@@ -7,10 +7,74 @@
     <link rel="stylesheet" href="Styles/styles.css">
 </head>
 <body>
-    <h1>Joc del penjat</h1>
-    <input id="object" type="password" placeholder="Inserta paraula">
-    <button id="comenzarPartida" onclick="comenzarPartida()">Comenzar partida</button>
+    <section class="header">
+        <h1>Joc del penjat</h1>
+        <input id="object" type="password" placeholder="Inserta paraula">
+        <icon onclick="iconOjo()" id="iconOjo">👁️</icon>
+        <button id="comenzarPartida" onclick="comenzarPartida()">Començar partida</button>
+    </section>
+    <section id="espai_lletres" class="espai_lletres">
+        <h2 id="resposta">Començar partida</h2>
+    </section>
 
-    <script src= "Joc.js"></script>
+    <section class="menu">
+        <div id="turnJugador1">
+            <h3>Jugador 1</h3>
+            <div>
+                <p>PUNT PARTIDES ACTUALS</p>
+                <p>0</p>
+                <p>TOTAL PARTIDES</p>
+                <P>0</P>
+                <P>PARTIDES GUANYADES</P>
+                <P>0</P>
+                <P>PARTIDA AMB MES PUNTUACIÓ</P>
+                <P>0</P>
+            </div>
+        </div>
+        <img id="img" src="Imatges/penjat_0.jpg" alt="">
+        <div id="turnJugador2">
+            <h3>Jugador 2</h3>
+            <div>
+                <p>PUNT PARTIDES ACTUALS</p>
+                <p>0</p>
+                <p>TOTAL PARTIDES</p>
+                <P>0</P>
+                <P>PARTIDES GUANYADES</P>
+                <P>0</P>
+                <P>PARTIDA AMB MES PUNTUACIÓ</P>
+                <P>0</P>
+            </div>
+        </div>
+    </section>
+
+    <section class="Buttons">
+        <button onclick="jugarLletra(this)" id="buto_1">A</button>
+        <button onclick="jugarLletra(this)" id="buto_2">B</button>
+        <button onclick="jugarLletra(this)" id="buto_3">C</button>
+        <button onclick="jugarLletra(this)" id="buto_4">D</button>
+        <button onclick="jugarLletra(this)" id="buto_5">E</button>
+        <button onclick="jugarLletra(this)" id="buto_6">F</button>
+        <button onclick="jugarLletra(this)" id="buto_7">G</button>
+        <button onclick="jugarLletra(this)" id="buto_8">H</button>
+        <button onclick="jugarLletra(this)" id="buto_9">I</button>
+        <button onclick="jugarLletra(this)" id="buto_10">J</button>
+        <button onclick="jugarLletra(this)" id="buto_11">K</button>
+        <button onclick="jugarLletra(this)" id="buto_12">L</button>
+        <button onclick="jugarLletra(this)" id="buto_13">M</button>
+        <button onclick="jugarLletra(this)" id="buto_14">N</button>
+        <button onclick="jugarLletra(this)" id="buto_15">O</button>
+        <button onclick="jugarLletra(this)" id="buto_16">P</button>
+        <button onclick="jugarLletra(this)" id="buto_17">Q</button>
+        <button onclick="jugarLletra(this)" id="buto_18">R</button>
+        <button onclick="jugarLletra(this)" id="buto_19">S</button>
+        <button onclick="jugarLletra(this)" id="buto_20">T</button>
+        <button onclick="jugarLletra(this)" id="buto_21">U</button>
+        <button onclick="jugarLletra(this)" id="buto_22">V</button>
+        <button onclick="jugarLletra(this)" id="buto_23">W</button>
+        <button onclick="jugarLletra(this)" id="buto_24">X</button>
+        <button onclick="jugarLletra(this)" id="buto_25">Y</button>
+        <button onclick="jugarLletra(this)" id="buto_26">Z</button>
+    </section>
+    <script src="Joc.js"></script>
 </body>
 </html>
