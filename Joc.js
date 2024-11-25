@@ -1,3 +1,30 @@
+//Declaració d'objecte puntuació
+const Puntuacio = {
+    numbers: {
+        puntuacioActual: [0, 0], // Puntuación actual de cada jugador
+        totalPartides: [0, 0],  // Total partidas jugadas por cada jugador
+        partidesGuanyades: [0, 0], // Partidas ganadas por cada jugador
+    },
+    //Fucio per controlar el camp de puntuació de cada jugador param jugador reb 0 o 1 i modifica el camp puntuacióActual 
+    incrementarPunts(jugador, punts) {
+        this.numbers.puntuacioActual[jugador] += punts;
+        if (this.numbers.puntuacioActual[jugador] < 0) {
+            this.numbers.puntuacioActual[jugador] = 0; // Asegurar que no haya puntos negativos
+        }
+    },
+
+    registrarPartida(jugador, guanyat) {
+        this.numbers.totalPartides[jugador]++;
+        if (guanyat) {
+            this.numbers.partidesGuanyades[jugador]++;
+        }
+        // Reiniciar la puntuación actual después de registrar
+        this.numbers.puntuacioActual[jugador] = 0;
+    },
+};
+
+
+
 // Declaració de variables
 // Declaración de variables
 const entrada = document.getElementById("object");
@@ -54,16 +81,12 @@ function jugarLletra(obj) {
                 aparicions++;
             }
         }
-        puntuacions[jugadorActual - 1] += aparicions;
+        Puntuacio.incrementarPunts(jugadorActual - 1, aparicions); // Usar el método del objeto
         mostrarParaula();
         actualitzarUIJugador();
     } else {
-
-         // Si el jugador falla, restamos un punto 
-         if (puntuacions[jugadorActual - 1] > 0) {
-            puntuacions[jugadorActual - 1]--;
-        }
-        actualitzarUIJugador()
+        Puntuacio.incrementarPunts(jugadorActual - 1, -1); // Restar puntos si falla
+        actualitzarUIJugador();
         contadorErrors++;
         document.getElementById("img").src = `Imatges/penjat_${contadorErrors}.jpg`;
         canviarTorn();
@@ -91,13 +114,7 @@ function canviarTorn() {
 }
 
 function finalitzarPartida(guanyat) {
-    totalPartides[jugadorActual - 1]++;
-    if (guanyat) {
-        partidesGuanyades[jugadorActual - 1]++;
-        if (puntuacions[jugadorActual - 1] > millorPuntuacio[jugadorActual - 1]) {
-            millorPuntuacio[jugadorActual - 1] = puntuacions[jugadorActual - 1];
-        }
-    }
+    Puntuacio.registrarPartida(jugadorActual - 1, guanyat); // Usamos el método del objeto
     actualitzarUIJugador(); 
     reiniciarJoc();
 }
