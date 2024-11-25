@@ -58,6 +58,12 @@ function jugarLletra(obj) {
         mostrarParaula();
         actualitzarUIJugador();
     } else {
+
+         // Si el jugador falla, restamos un punto 
+         if (puntuacions[jugadorActual - 1] > 0) {
+            puntuacions[jugadorActual - 1]--;
+        }
+        actualitzarUIJugador()
         contadorErrors++;
         document.getElementById("img").src = `Imatges/penjat_${contadorErrors}.jpg`;
         canviarTorn();
@@ -92,6 +98,7 @@ function finalitzarPartida(guanyat) {
             millorPuntuacio[jugadorActual - 1] = puntuacions[jugadorActual - 1];
         }
     }
+    actualitzarUIJugador(); 
     reiniciarJoc();
 }
 
