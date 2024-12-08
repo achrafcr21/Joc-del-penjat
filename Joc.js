@@ -1,3 +1,37 @@
+//Declaració d'objecte puntuació
+const Puntuacio = {
+    numbers: {
+        puntuacioActual: [0, 0], // Puntuación actual de cada jugador
+        totalPartides: [0, 0],  // Total partidas jugadas por cada jugador
+        partidesGuanyades: [0, 0], // Partidas ganadas por cada jugador
+    },
+    //Fucio per controlar el camp de puntuació de cada jugador param jugador reb 0 o 1 i modifica el camp puntuacióActual 
+    incrementarPunts(jugador, punts) {
+        this.numbers.puntuacioActual[jugador] += punts;
+        if (this.numbers.puntuacioActual[jugador] < 0) {
+            this.numbers.puntuacioActual[jugador] = 0; // Asegurar que no haya puntos negativos
+        }
+    },
+
+    registrarPartida(jugador, guanyat) {
+        this.numbers.totalPartides[jugador]++; // Sumar total de partidas jugadas
+        if (guanyat) {
+            this.numbers.partidesGuanyades[jugador]++; // Sumar partidas ganadas si el jugador ganó
+        }
+        // Comparar la puntuación actual con la mejor puntuación
+        if (!this.numbers.millorPuntuacio) {
+            this.numbers.millorPuntuacio = [0, 0]; // Inicializar si no existe
+        }
+        if (this.numbers.puntuacioActual[jugador] > this.numbers.millorPuntuacio[jugador]) {
+            this.numbers.millorPuntuacio[jugador] = this.numbers.puntuacioActual[jugador];
+        }
+        // Reiniciar la puntuación actual para la próxima partida
+        this.numbers.puntuacioActual[jugador] = 0;
+    },
+};
+
+
+
 // Declaració de variables
 // Declaración de variables
 const entrada = document.getElementById("object");
@@ -30,6 +64,7 @@ function comenzarPartida() {
     paraulaActual = Array(paraulaSecreta.length).fill('_');
     mostrarParaula();
     actualitzarUIJugador();
+    generarBotons();
     // Cambiar el color del Jugador 2 a rojo
     document.getElementById('turnJugador2').style.backgroundColor = 'red';
     // Cambiar el color del Jugador 1 a verde
@@ -42,29 +77,32 @@ function mostrarParaula() {
 
 function jugarLletra(obj) {
     const lletraJugada = obj.textContent;
-    obj.disabled = true;
-    let haAdivinat = false;
+    obj.disabled = true; // Deshabilitar el botón
+    obj.classList.add('disabled'); // Añadir la clase para diferenciar el botón deshabilitado
     let aparicions = 0;
 
+    // Verificar si la letra está en la palabra secreta
     if (paraulaSecreta.includes(lletraJugada)) {
-        haAdivinat = true;
         for (let i = 0; i < paraulaSecreta.length; i++) {
             if (paraulaSecreta[i] === lletraJugada && paraulaActual[i] === '_') {
                 paraulaActual[i] = lletraJugada;
                 aparicions++;
             }
         }
-        puntuacions[jugadorActual - 1] += aparicions;
-        mostrarParaula();
-        actualitzarUIJugador();
+        Puntuacio.incrementarPunts(jugadorActual - 1, aparicions); // Añadir puntos por las apariciones
+        mostrarParaula(); // Mostrar la palabra con las letras acertadas
     } else {
+        Puntuacio.incrementarPunts(jugadorActual - 1, -1); // Restar un punto por fallar
         contadorErrors++;
         document.getElementById("img").src = `Imatges/penjat_${contadorErrors}.jpg`;
-        canviarTorn();
+        canviarTorn(); // Cambiar el turno al otro jugador
     }
 
+    // Verificar si la partida termina (por ganar o perder)
     if (contadorErrors >= 10 || !paraulaActual.includes('_')) {
-        finalitzarPartida(paraulaActual.includes('_') ? false : true);
+        finalitzarPartida(paraulaActual.includes('_') ? true : false);
+    } else {
+        actualitzarUIJugador(); // Actualizar la interfaz solo si no termina la partida
     }
 }
 
@@ -85,14 +123,17 @@ function canviarTorn() {
 }
 
 function finalitzarPartida(guanyat) {
-    totalPartides[jugadorActual - 1]++;
-    if (guanyat) {
-        partidesGuanyades[jugadorActual - 1]++;
-        if (puntuacions[jugadorActual - 1] > millorPuntuacio[jugadorActual - 1]) {
-            millorPuntuacio[jugadorActual - 1] = puntuacions[jugadorActual - 1];
-        }
+    // Registrar la partida del jugador actual
+    Puntuacio.registrarPartida(jugadorActual - 1, guanyat);
+
+    // Si el otro jugador también participó (en el caso de partidas multijugador), registrar su partida
+    if (contadorErrors >= 10 && !guanyat) {
+        const otroJugador = jugadorActual === 1 ? 2 : 1;
+        Puntuacio.registrarPartida(otroJugador - 1, false); // El otro jugador pierde
     }
-    reiniciarJoc();
+
+    actualitzarUIJugador(); // Actualizar la interfaz después de registrar
+    reiniciarJoc(); // Reiniciar la partida
 }
 
 function reiniciarJoc() {
@@ -101,7 +142,7 @@ function reiniciarJoc() {
     paraulaActual = [];
     contadorErrors = 0;
     puntuacions = [0, 0];
-    document.querySelectorAll('.Buttons button').forEach(boton => boton.disabled = false);
+    habilitarBotons();
     document.getElementById('img').src = 'Imatges/penjat_0.jpg';
     document.getElementById('resposta').textContent = 'Comença la partida';
     actualitzarUIJugador();
@@ -110,17 +151,17 @@ function reiniciarJoc() {
 function actualitzarUIJugador() {
     // Actualizar la información para Jugador 1
     let jugador1Div = document.getElementById('turnJugador1').querySelectorAll('p');
-    jugador1Div[1].textContent = puntuacions[0]; // Puntos partida actual Jugador 1
-    jugador1Div[3].textContent = totalPartides[0]; // Total partides Jugador 1
-    jugador1Div[5].textContent = partidesGuanyades[0]; // Partides guanyades Jugador 1
-    jugador1Div[7].textContent = millorPuntuacio[0]; // Millor puntuació Jugador 1
+    jugador1Div[1].textContent = Puntuacio.numbers.puntuacioActual[0]; // Puntos partida actual Jugador 1
+    jugador1Div[3].textContent = Puntuacio.numbers.totalPartides[0]; // Total partidas Jugador 1
+    jugador1Div[5].textContent = Puntuacio.numbers.partidesGuanyades[0]; // Partidas ganadas Jugador 1
+    jugador1Div[7].textContent = Puntuacio.numbers.millorPuntuacio ? Puntuacio.numbers.millorPuntuacio[0] : 0; // Mejor puntuación Jugador 1
 
     // Actualizar la información para Jugador 2
     let jugador2Div = document.getElementById('turnJugador2').querySelectorAll('p');
-    jugador2Div[1].textContent = puntuacions[1]; // Puntos partida actual Jugador 2
-    jugador2Div[3].textContent = totalPartides[1]; // Total partides Jugador 2
-    jugador2Div[5].textContent = partidesGuanyades[1]; // Partides guanyades Jugador 2
-    jugador2Div[7].textContent = millorPuntuacio[1]; // Millor puntuació Jugador 2
+    jugador2Div[1].textContent = Puntuacio.numbers.puntuacioActual[1]; // Puntos partida actual Jugador 2
+    jugador2Div[3].textContent = Puntuacio.numbers.totalPartides[1]; // Total partidas Jugador 2
+    jugador2Div[5].textContent = Puntuacio.numbers.partidesGuanyades[1]; // Partidas ganadas Jugador 2
+    jugador2Div[7].textContent = Puntuacio.numbers.millorPuntuacio ? Puntuacio.numbers.millorPuntuacio[1] : 0; // Mejor puntuación Jugador 2
 }
 
 function iconOjo() {
@@ -130,3 +171,32 @@ function iconOjo() {
         entrada.type = "password";
     }
 }
+
+
+function generarBotons() {
+    const contenedorBotones = document.querySelector('.Buttons');
+    contenedorBotones.innerHTML = ''; // Limpiar botones anteriores, si los hubiera
+
+    // Crear botones para cada letra (A-Z)
+    for (let i = 0; i < 26; i++) {
+        const boton = document.createElement('button');
+        boton.textContent = String.fromCharCode(65 + i); // Letras A-Z
+        boton.classList.add('boton-letra'); // Clase para los estilos
+        boton.addEventListener('click', () => jugarLletra(boton)); // Asignar evento al botón
+        contenedorBotones.appendChild(boton); // Añadir botón al contenedor
+    }
+}
+
+const habilitarBotons = () => {
+    document.querySelectorAll('.boton-letra').forEach(boton => {
+        boton.disabled = false; // Habilitar el botón
+        boton.classList.remove('disabled'); // Remover la clase de deshabilitado si existe
+    });
+};
+
+const deshabilitarBotons = () => {
+    document.querySelectorAll('.boton-letra').forEach(boton => {
+        boton.disabled = true; // Deshabilitar el botón
+        boton.classList.add('disabled'); // Añadir una clase para indicar que está deshabilitado
+    });
+};
